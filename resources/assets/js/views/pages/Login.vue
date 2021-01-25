@@ -21,7 +21,7 @@
 }
   img{
     height: auto!important;
-    filter: blur(1px);
+    /* filter: blur(1px); */
     
   }
   .login-block{

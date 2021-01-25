@@ -706,13 +706,13 @@ input[type="number"]::-webkit-outer-spin-button {
                 <div>
                   <b-row>
                     <table class="w-100">
-                      <tr border="#111"  bgcolor="#3ea4fe">
-                        <td valign="top" style="border-radius: 10px;">
-                          <span style="font-size: 18px; color: white">&emsp;GROSS TOTAL:</span>
+                      <tr border="#111"  bgcolor="#FF8C00">
+                        <td valign="top">
+                          <span style="font-size: 18px; color: white">GROSS TOTAL:</span>
                           <span
                             ref="gross_amount"
                             id="gross_amount"
-                            style="font-size: 54px; color:#FF8C00"
+                            style="font-size: 54px; color:white"
                             class="float-right"
                           >{{formatNumber(this.getTotalItems)}}</span>
                         </td>
@@ -1056,6 +1056,7 @@ export default {
         this.forms.pos.fields.items = this.tables.posentry.items
         if (this.entryMode == "Add") {
           this.createEntity("pos", false, "posentry");
+          
         } else {
           this.updateEntity(
             "pos",

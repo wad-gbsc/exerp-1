@@ -62,7 +62,7 @@ Vue.component('cSwitch', cSwitch)
 
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest'
 const axiosConfig = {
-  baseURL: 'http://webpos.test',
+  baseURL: 'http://139.59.125.140',
   timeout: 30000
 }
 

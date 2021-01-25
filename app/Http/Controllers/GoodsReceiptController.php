@@ -43,11 +43,13 @@ class GoodsReceiptController extends Controller
         [
             'doc_ref_no' => 'required',
         ]
-    )->validate();
+        )->validate();
 
-    $code = DB::table('brmr')->select('*')->where('co_no', '01')->where('br_no', '01')->first();
+        $code = DB::table('brmr')->select('*')->where('co_no', '01')->where('br_no', '01')->first();
 
         $goodreceipt = new Psgh();
+        $goodreceipt->co_no = '01';
+        $goodreceipt->br_no = '01';
         $goodreceipt->gr_no = $code->pfx_psgh_gr_no.str_pad($code->nx_psgh_gr_no, 13, '0', STR_PAD_LEFT);
         $goodreceipt->psoh_hash = $request->input('psoh_hash');
         $goodreceipt->ord_req_no = $request->input('ord_req_no');
@@ -56,7 +58,7 @@ class GoodsReceiptController extends Controller
         $goodreceipt->status_code = 'R';
         $goodreceipt->issued_dt = Carbon::now();
         $goodreceipt->create_date = Carbon::now();
-        $goodreceipt->update_id = Auth::user()->username;
+        $goodreceipt->update_id = Auth::user()->user_hash;
         $goodreceipt->save();
 
         DB::table('brmr')->where('co_no', '01')->where('br_no', '01')->increment('nx_psgh_gr_no');
@@ -75,7 +77,8 @@ class GoodsReceiptController extends Controller
                 'receipt_qty'=>$item['new_receipt_qty'],
                 'act_cost'=>$item['act_cost'],
                 'sale_price'=>$item['sale_price'],
-                'create_date'=>Carbon::now()
+                'create_id' => Auth::user()->user_hash,
+                'create_date'=>Carbon::now(),
         
             ];
         }
@@ -93,6 +96,7 @@ class GoodsReceiptController extends Controller
                 'cost'=>$item['act_cost'],
                 'date'=>date("Y-m-d"),
                 'expiry_date'=>$item['expiry_date'],
+                // 'create_id' => Auth::user()->user_hash,
                 'create_date'=>Carbon::now()
         
             ];

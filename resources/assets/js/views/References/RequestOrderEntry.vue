@@ -72,7 +72,7 @@
                            </b-col>
                         <b-col lg="4">
                         <b-form-group>
-                        <label for="request_user">* Person Requesting RO</label>
+                        <label for="request_user">* Person Requisitioner RO</label>
                         <b-form-input
                             style="background-color:white;"
                             :disabled="status_code == 'A' || status_code == 'R'"
@@ -80,7 +80,7 @@
                             id="request_user"
                             ref="request_user"
                             type="text"
-                            placeholder="Person requisitioner RO"
+                            placeholder="Person Requisitioner RO"
                             >
                         </b-form-input>
                         </b-form-group>
@@ -171,7 +171,7 @@
 
              <b-modal   
                 header-bg-variant="primary"
-                title="Items"
+                title="Products"
                 v-model="showModalINMR"
                 :noCloseOnEsc="true"
                 :noCloseOnBackdrop="true"
@@ -546,7 +546,6 @@ export default {
                     text: "You won't be able to revert this!",
                     })
                  .then((result) => {
-
                         // Send request to the server
                          if (result.value) {
                                 this.$http

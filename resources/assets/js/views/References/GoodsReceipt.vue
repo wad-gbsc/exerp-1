@@ -9,22 +9,23 @@
         <b-col sm="12">
           <b-card>
             <!-- sec card -->
-              <template #header>
+                   <template #header>
               <div style="height:25px">
               <b-row>
                <b-col sm="4">
                  <h5 >
                    <span style="color: #FF8C00;">
-                      Good Receipt Input
+                      Goods Receipt Input
                   </span>
                 </h5>
               </b-col>
 
-              <b-col sm="5">
+              <b-col sm="7">
                 <span></span>
               </b-col>
 
-              <b-col sm="3">
+              <b-col sm="1">
+                <b-form-group style="float:right; margin-top:3px;">
                 <b-button
                 :disabled="forms.goodsreceipt.isSaving"
                 variant="primary"
@@ -34,7 +35,8 @@
                 <i class="fa fa-floppy-o"></i>
                 Save
               </b-button>
-                <b-button variant="danger"  @click="showEntry=false"><i class="fa fa-ban"></i> Cancel</b-button>
+              </b-form-group>
+                <!-- <b-button variant="danger"  @click="showEntry=false"><i class="fa fa-ban"></i> Cancel</b-button> -->
               </b-col>
               </b-row>
               </div>
@@ -110,78 +112,12 @@
                     :items.sync="tables.goodsreceiptitems.items"
                   
                   >
-                    <!-- table -->
-                    <!-- <template v-slot:cell(new_receipt_qty)="data">
-                      <vue-autonumeric
-                        ref="new_receipt_qty"
-                        name="new_receipt_qty"
-                        id="new_receipt_qty"
-                        v-model="data.item.new_receipt_qty"
-                        class="form-control text-right"
-                        :options="{
-                                                minimumValue: '0', 
-                                                emptyInputBehavior:'0',}"
-                      ></vue-autonumeric>
-                    </template> -->
-
-                    <!-- <template  v-slot:cell(act_cost)="data">
-                      <vue-autonumeric
-                        ref="act_cost"
-                        name="act_cost"
-                        id="act_cost"
-                        v-model="data.item.act_cost"
-                        class="form-control text-right"
-                        :options="{
-                                                minimumValue: '0', 
-                                                emptyInputBehavior:'1',}"
-                      ></vue-autonumeric>
-                    </template> -->
-
-                     <!-- <template  v-slot:cell(sale_price)="data">
-                      <vue-autonumeric
-                        ref="sale_price"
-                        id="sale_price"
-                        name="sale_price"
-                        v-model="data.item.sale_price"
-                        class="form-control text-right"
-                        :options="{
-                                                minimumValue: '0', 
-                                                emptyInputBehavior:'0',}"
-                      ></vue-autonumeric>
-                    </template> -->
-                        </b-table>
-                  <!-- table -->
-                  <!-- <b-row>
-                            <b-col lg=4>
-                               
-                            </b-col>
-                            <b-col lg=3></b-col>
-                            <b-col lg=5>
-                                <b-row>
-                                    <b-col lg=5>
-                                        <label class="float-right col-form-label">Total Amount :</label>
-                                    </b-col>
-                                    <b-col lg=7>
-                                        <vue-autonumeric
-                                            readonly
-                                            ref="total_amount"
-                                            id="total_amount"
-                                            v-model="this.getTotalItems"
-                                            class='form-control text-right'
-                                            :options="{
-                                            minimumValue: '0',  
-                                            emptyInputBehavior:'0',}"
-                                        >
-                                        </vue-autonumeric>
-                                    </b-col>
-                                </b-row>
-                            </b-col>
-                        </b-row> -->
+                  </b-table>
                 </b-col>
               </b-row>
             </div>
             <!-- modal footer buttons -->
-            <div>
+            <div v-show="forms.goodsreceipt.fields.ord_req_no != null">
               <!-- row table -->
               <b-row class="mb-2">
                     <b-col lg=4>
@@ -706,26 +642,77 @@ export default {
       }
     },
     ongoodsreceiptsEntry() {
-      if(this.tables.goodsreceiptitems.items.length > 0) {
-        this.forms.goodsreceipt.fields.items = this.tables.inlo.items
-        if (this.entryMode == "Add") {
-          this.createEntity("goodsreceipt", false, "goodsreceipts");
-        } else {
-          this.updateEntity(
-            "goodsreceipt",
-            "psgh_hash",
-            false,
-            this.row
-          );
-        }
-      }
-      else {
-        this.$notify({
-          type: 'error',
-          group: 'notification',
-          title: 'Error!',
-          text: 'Please Add an Item'
-        })
+      this.forms.goodsreceipt.fields.items = this.tables.inlo.items
+      if(this.forms.goodsreceipt.fields.ord_req_no == null) {
+        Swal.fire({
+                  position: 'center',
+                  icon: 'error',
+                  title: 'Please Select',
+                  text:  'Request Order No.',
+                  showConfirmButton: false,
+                  timer: 2000
+                  })
+      } else if (this.tables.inlo.items <= [0]) {
+          Swal.fire({
+                  position: 'center',
+                  icon: 'error',
+                  title: 'Please Add Product',
+                  showConfirmButton: false,
+                  timer: 1500
+                  })
+      }else{
+          if (this.entryMode == "Add") {
+              // this.createEntity("goodsreceipt", false, "goodsreceipts");
+              this.forms.goodsreceipt.isSaving = true;
+              this.resetFieldStates('goodsreceipt');
+              this.$http
+                .post("api/goodsreceipt", this.forms.goodsreceipt.fields, {
+                  headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                  }
+                })
+                .then(response => {
+                  this.forms.goodsreceipt.isSaving = false;
+                  this.clearFields('goodsreceipt');
+                  Swal.fire({
+                  position: 'center',
+                  icon: 'success',
+                  title: 'Successfully Created.',
+                  showConfirmButton: false,
+                  timer: 2000
+                  })
+                  this.loadgoodsreceipt()
+                  this.tables.goodsreceiptitems.items = []
+                  this.tables.inlo.items = []
+                
+                })
+                .catch(error => {
+                  this.forms.goodsreceipt.isSaving = false;
+                  if (!error.response) return;
+                  const errors = error.response.data.errors;
+                  var a = 0;
+                  for (var key in errors) {
+                    if (a == 0) {
+                      this.focusElement(key, false);
+                      Toast.fire({
+                      icon: 'error',
+                      title: 'Error!',
+                      showConfirmButton: false,
+                      timer: 2000,
+                      text: errors[key][0]
+                      })
+                    }
+                    a++;
+                  }
+                });
+            } else {
+              this.updateEntity(
+                "goodsreceipt",
+                "psgh_hash",
+                false,
+                this.row
+              );
+            }
       }
     },
     ongoodsreceiptsDelete() {
@@ -808,24 +795,22 @@ export default {
   },
   removeProduct(index){
         this.tables.inlo.items.splice(index, 1)
-    }
-  },
-  created() {
-    // this.row = data.item;
-    //   this.$http.get('api/goodsreceipt/'+ data.item.psgh_hash,
-  this.$http.get('api/goodsreceipts', {
+    },
+    loadgoodsreceipt() {
+    this.$http.get('api/goodsreceipts', {
         headers: {
             Authorization: 'Bearer ' + localStorage.getItem('token')
         }
     }).then(response => {
-        // this.tables.goodsreceipts.items = response.data.goodsreceipts;
-        // this.paginations.goodsreceipts.totalRows = response.data.goodsreceipts.length;
-        // this.tables.products.items = response.data.products;
-        // this.paginations.products.totalRows = response.data.products.length;
         this.options.psoh.items = response.data.psoh
     }).catch(error => {
         console.log(error)
     })
+  },
+  },
+  
+  created() {
+      this.loadgoodsreceipt();
   },
   computed: {
     getTotalItems() {

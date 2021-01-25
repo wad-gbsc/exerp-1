@@ -40,14 +40,19 @@ class zReadingController extends Controller
 
     public function PrintBetweenDate($from_date, $to_date)
     {   
+
+
         $data['printbetweendate'] = DB::table('pssh')->select('*')->orderBy('trans_no', 'asc');
                     
         if($from_date != 0 || $to_date != 0)
-        {
+        {  
+            // $data['beginning']->whereRaw('DATE(trans_date) BETWEEN DATE("'.$from_date.'") AND DATE("'.$to_date.'")');
+
             $data['printbetweendate']->whereRaw('DATE(trans_date) BETWEEN DATE("'.$from_date.'") AND DATE("'.$to_date.'")');
         }
 
         $data['printbetweendate'] = $data['printbetweendate']->get();
+        
 
         $data['date_from'] = $from_date;
         $data['date_to'] = $to_date;
@@ -56,7 +61,8 @@ class zReadingController extends Controller
         $content = view('print.zreading')->with($data);
         $mpdf->WriteHTML($content);
         $mpdf->Output();
-          
+
+        
     }
 
     public function Between($from_date, $to_date)

@@ -57,6 +57,8 @@ class PosController extends Controller
         $pos->trans_date = date('Y-m-d');
         $pos->sold_to = 'CASH';
         $pos->payment_mode = 'CA';
+        $pos->co_no = '01';
+        $pos->br_no = '01';
         $pos->gross_amount = $request->input('gross_amount');
         $pos->disc_code = $request->input('disc_code');
         $pos->disc_amount = $request['disc_amount_header'];
@@ -65,7 +67,7 @@ class PosController extends Controller
         // $pos->net_amount = $request->input('net_amount');
         $pos->cash_rendered = $request->input('cash_rendered');
         $pos->create_date = Carbon::now();
-        $pos->update_id = Auth::user()->username;
+        $pos->update_id = Auth::user()->user_hash;
         $pos->save();
 
         DB::table('brmr')->where('co_no', '01')->where('br_no', '01')->increment('nx_pssh_trans_no');
@@ -86,6 +88,7 @@ class PosController extends Controller
                 'disc_amount'=>$item['disc_amount'],
                 'extended'=>$item['extended'],
                 // 'sale_qty'=>$item['sale_qty'],
+                'create_id' => Auth::user()->user_hash,
                 'create_date'=>Carbon::now()
         
             ];

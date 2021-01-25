@@ -51,21 +51,22 @@
         
         <?php 
         $gross_total = 0; 
-        $net_total = 0;
+        $net_amount = 0;
         $tot_taxable_amount = 0;
         $vat_amount = 0;
         $cash_rendered = 0;
+        $disc_amount = 0;
         $totalcost = collect($printbetweendate)->count();
         foreach($printbetweendate as $print)
         $gross_total += $print->gross_amount
         ?>
         <?php
         foreach($printbetweendate as $print)
-        $net_total += $print->net_amount
+        $tot_taxable_amount += $print->tot_taxable_amount
         ?>
         <?php
         foreach($printbetweendate as $print)
-        $tot_taxable_amount += $print->tot_taxable_amount
+        $net_amount += $print->net_amount
         ?>
         <?php
         foreach($printbetweendate as $print)
@@ -75,43 +76,47 @@
         foreach($printbetweendate as $print)
         $cash_rendered += $print->cash_rendered
         ?>
+        <?php
+        foreach($printbetweendate as $print)
+        $disc_amount += $print->disc_amount
+        ?>
+
 
         
-
         <tr>
             
-            <td>Date From: <br>
-                Date To:<br>
-                Register Time:<br>
-                Register #:<br>
-                Location #:<br>
-                Terminal #:<br>
-                Operator:<br>
+            <td>Date From: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{$date_from}} <br>
+                Date To: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{$date_to}}<br>
+                Register Date/Time:&emsp;&nbsp; <?= date("d/m/Y H:i:s", time()); ?><br>
+                Register #:<span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;000000101</span><br>
+                Location #:<span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;Tarlac City</span><br>
+                Terminal #: <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;All</span><br>
+                Operator: <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;All</span><br>
                 <hr><br>
                 Beginning SI#: <br>
                 Ending SI#:<br>
                 <hr>
                 Beginning:<br>
-                Today:<br>
-                Ending:<br>
+                Today: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{number_format($net_amount,2)}}<br>
+                Ending:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format($net_amount,2)}}<br>
                 <hr>
-                GROSS Sales: {{$gross_total}}<br>
-                Net Sales: {{$net_total}}<br>
+                GROSS Sales: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format($gross_total,2)}}<br>
+                Net Sales :&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{{number_format($net_amount,2)}}<br>
                 <hr><br>
-                Total Cancel: <br>
-                Canceled Sales: <br>
+                Total Cancel:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;&nbsp;{{number_format(0.00,2)}} <br>
+                Canceled Sales: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{number_format(0.00,2)}}<br>
                 <hr>
-                S.C Discount:<br>
+                S.C Discount:  &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{{number_format($disc_amount,2)}}<br>
                 <hr>
-                Vat Sales: <br>
-                12 % Vat: <br>
-                Vat Exempt Sales: <br>
-                Vat Zero Rated: <br>
+                Vat Sales: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format($net_amount,2)}} <br>
+                12 % Vat: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{{number_format($vat_amount,2)}}<br>
+                Vat Exempt Sales:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format(0.00,2)}} <br>
+                Vat Zero Rated:&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{number_format(0.00,2)}}<br>
                 <hr><br>
-                TOTAL CASH: <br>
-                GRAND TOTAL: <br>
+                TOTAL CASH: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{{number_format($net_amount,2)}}<br>
+                GRAND TOTAL: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format($net_amount,2)}}<br>
                 Total Qty Sold: <br>
-                Transaction Count: {{$totalcost}}<br>
+                Transaction Count:&emsp;&emsp;&emsp;&emsp;&emsp; {{$totalcost}}<br>
                 <hr>
                 No Cash Out
             </td>
@@ -128,7 +133,7 @@
     
     <table>
 		<tr>
-			<td >Prepared by : &emsp;&emsp;</td>
+			<td >Prepared by :</td>
             
 		</tr>
 				

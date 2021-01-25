@@ -26,7 +26,9 @@ export default {
           title: 'Successfully Created.',
           showConfirmButton: false,
           timer: 2000
+          
           })
+          window.location.reload();
           console.log(entity_table);
           console.log(this.tables[entity_table].items);
           console.log(this.paginations[entity_table].totalRows);
