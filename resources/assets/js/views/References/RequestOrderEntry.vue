@@ -26,7 +26,7 @@
                         <b-col lg="4">
                         <b-form-group style="float:right; margin-top:3px;">
                         <b-button variant="danger" @click="setDelete()" v-show="forms.poentry.fields.ord_req_no != null" :disabled="status_code === 'R' || status_code === 'A'"><i class="fa fa-ban"></i> Cancel</b-button>
-                        <b-button variant="outline-primary" @click="status_code = null, clearFields('poentry'), tables.poe.items = [], forms.poentry.fields.required_date = '', entryMode = 'Add'"><i class="fa fa-eraser"></i> Clear</b-button>
+                        <b-button variant="outline-primary" @click="status_code = null, clearFields('poentry'), tables.poe.items = [], $refs.required_date.clearDate(), entryMode = 'Add'"><i class="fa fa-eraser"></i> Clear</b-button>
                         <b-button variant="primary"  :disabled="forms.poentry.isSaving" @click="onPurchasemainEntry()"> <icon v-if="forms.poentry.isSaving" name="sync" spin></icon><i class="fa fa-floppy-o"></i> Save</b-button>
                         </b-form-group>
                          </b-col>
@@ -87,10 +87,6 @@
                         
                         <label for="status"> Status</label>
                         <h5>
-                            <!-- <b-badge variant="primary" style="width: 20%;"
-                            id="status"
-                            ref="status">
-                            {{status_code}}</b-badge> -->
                             <div v-show="status_code != 'X'">
                             <b-badge v-if="status_code == 'O'" pill variant="primary">{{"Open"}}</b-badge>
                             <b-badge v-else-if="status_code == 'A'" pill variant="warning" style="color: white;">{{"Approved"}}</b-badge>
@@ -145,7 +141,6 @@
                                                     emptyInputBehavior:'0',}"
                                 ></vue-autonumeric>
                                 </template>
-                                
                                  <template v-slot:cell(remarks)="data">
                                  <b-form-input
                                     v-model="data.item.remarks"
@@ -155,7 +150,6 @@
                                     >
                                 </b-form-input>
                                 </template>
-
                                  <template v-slot:cell(action)="data">
                                 <b-btn :size="'sm'" variant="danger" :disabled="status_code == 'A' || status_code == 'R' " @click="removeProduct(data.index)">
                                     <i class="fa fa-trash"></i>

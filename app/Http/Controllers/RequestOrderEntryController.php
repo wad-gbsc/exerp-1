@@ -58,7 +58,7 @@ class RequestOrderEntryController extends Controller
     ])->validate();
     $poe = new Psoh();
     $poe->co_no = '01';
-    $poe->co_no = '01';
+    $poe->br_no = '01';
     $poe->ord_req_no = DB::raw('code()');
     $poe->ord_req_no = $code->pfx_psoh_ord_req_no.str_pad($code->nx_psoh_ord_req_no, 13, '0', STR_PAD_LEFT);
     $poe->request_user = $request->input('request_user');

@@ -106,16 +106,11 @@
                 TOTAL CASH: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;&nbsp;{{number_format($net_amount,2)}}<br>
                 GRAND TOTAL: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{number_format($net_amount,2)}}<br>
                 Total Qty Sold: <br>
-                Transaction Count:&emsp;&emsp;&emsp;&emsp;&emsp; {{$totalcost}}<br>
+                Transaction Count:&emsp;&emsp;&emsp;&emsp;&emsp; {{number_format($totalcost)}}<br>
                 <hr>
                 No Cash Out
             </td>
         </tr>
-    
-        {{-- <tr>
-            <td>Client Name</td>
-            <td><b>Juan Dela Cruz</b></td>
-        </tr> --}}
     </thead>
     
     </table>
