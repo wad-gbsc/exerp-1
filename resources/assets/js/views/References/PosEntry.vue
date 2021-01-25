@@ -1055,7 +1055,53 @@ export default {
       if(this.tables.posentry.items.length > 0) {
         this.forms.pos.fields.items = this.tables.posentry.items
         if (this.entryMode == "Add") {
-          this.createEntity("pos", false, "posentry");
+          // this.createEntity("pos", false, "posentry");
+          this.resetFieldStates('pos');
+      this.$http
+        .post("api/pos" ,this.forms.pos.fields, {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
+          }
+        })
+        .then(response => {
+          this.forms.pos.isSaving = false;
+          this.clearFields('pos');
+          Swal.fire({
+          position: 'center',
+          icon: 'success',
+          title: 'Transaction Completed.',
+          showConfirmButton: false,
+          timer: 2000
+          
+          })
+          setTimeout(function () {
+                window.location.reload();
+          }, 1500);
+          
+         
+        })
+        .catch(error => {
+          this.forms.pos.isSaving = false;
+          if (!error.response) return;
+          const errors = error.response.data.errors;
+          var a = 0;
+          for (var key in errors) {
+            // this.forms[entity].states[key] = false
+            // this.forms[entity].errors[key] =  errors[key]
+            if (a == 0) {
+              this.focusElement(key, false);
+              Toast.fire({
+              icon: 'error',
+              title: 'Error!',
+              showConfirmButton: false,
+              timer: 2000,
+              text: errors[key][0]
+              })
+              // this.forms[entity].isSaving = false;
+            }
+            a++;
+          }
+        });
           
         } else {
           this.updateEntity(

@@ -295,7 +295,6 @@
                     variant="primary"
                     @click="rowSelected"
                   >
-                    <icon ></icon>
                     <i class="fa fa-check"></i>
                     Accept
                   </b-button>
