@@ -57,6 +57,8 @@ class RequestOrderEntryController extends Controller
             'reason' => 'Reason for Request',
     ])->validate();
     $poe = new Psoh();
+    $poe->co_no = '01';
+    $poe->co_no = '01';
     $poe->ord_req_no = DB::raw('code()');
     $poe->ord_req_no = $code->pfx_psoh_ord_req_no.str_pad($code->nx_psoh_ord_req_no, 13, '0', STR_PAD_LEFT);
     $poe->request_user = $request->input('request_user');
@@ -80,6 +82,7 @@ class RequestOrderEntryController extends Controller
             'uom_code'=>$item['uom_code'],
             'available_qty'=>$item['available_qty'],
             'price'=>$item['price'],
+            'act_cost'=>$item['price'],
             'order_qty'=>$item['order_qty'],
             'remarks'=>$item['remarks']
         ];

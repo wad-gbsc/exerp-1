@@ -430,7 +430,7 @@ export default {
                         position: 'center',
                         icon: 'success',
                         title: 'Successfully Created.',
-                        text: this.getRequest,
+                        // text: this.getRequest,
                         showConfirmButton: false,
                         timer: 2000
                         })

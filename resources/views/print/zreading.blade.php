@@ -44,11 +44,9 @@
         </tr>
         <tr>
             <td> &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;MIN:&nbsp;0000000 <br>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;SN#:&nbsp;0000000</td>
-            
         </tr>
         <hr>
         <br>
-        
         <?php 
         $gross_total = 0; 
         $net_amount = 0;
@@ -74,17 +72,9 @@
         ?>
         <?php
         foreach($printbetweendate as $print)
-        $cash_rendered += $print->cash_rendered
-        ?>
-        <?php
-        foreach($printbetweendate as $print)
         $disc_amount += $print->disc_amount
         ?>
-
-
-        
         <tr>
-            
             <td>Date From: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;{{$date_from}} <br>
                 Date To: &emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{$date_to}}<br>
                 Register Date/Time:&emsp;&nbsp; <?= date("d/m/Y H:i:s", time()); ?><br>
@@ -134,38 +124,8 @@
     <table>
 		<tr>
 			<td >Prepared by :</td>
-            
 		</tr>
-				
-		
 	</table>
-
-    {{-- <table>
-        <tr>
-            <td><b>Item(s)</b></td>
-            <td><b>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;PHP</b></td>
-        </tr>
-        <tr><td colspan="2"><hr></td></tr>
-        
-    </table>
-    <hr>
-
-    <table>
-        <tr>
-            <td>Name : ____________________________</td>
-        </tr>
-        <tr>
-            <td>Address : __________________________</td>
-            
-        </tr>
-        <tr>
-            <td><span>TIN : _______________________________</span></td>
-        </tr>
-        <tr>
-            <td><span>Business Style : ____________________</span></td>
-        </tr>
-    </table>
-    <hr> --}}
 
 </div>
 </body>

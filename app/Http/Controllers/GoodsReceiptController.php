@@ -38,7 +38,6 @@ class GoodsReceiptController extends Controller
      */
     public function create(Request $request)
     {
-
         Validator::make($request->all(),
         [
             'doc_ref_no' => 'required',

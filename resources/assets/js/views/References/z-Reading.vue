@@ -177,14 +177,6 @@ export default {
               showConfirmButton: false,
               timer: 2000
               })
-        // } else if (this.forms.zreading.fields.user_hash == null) {
-        //      Toast.fire({
-        //       position: 'top-right',
-        //       icon: 'error',
-        //       title: 'Please select a Cashier',
-        //       showConfirmButton: false,
-        //       timer: 2000
-        //       })
         } else if (this.from_datetime != null && this.to_datetime != null && this.forms.zreading.fields.user_hash != null) {
             date_from = this.moment(this.from_datetime, "YYYY-MM-DD");
             date_to = this.moment(this.to_datetime, "YYYY-MM-DD");
@@ -195,7 +187,6 @@ export default {
             date_to = this.moment(this.to_datetime, "YYYY-MM-DD");
             window.open("api/print/betweendate/" + date_from + "/" + date_to);
         }
-       
     },
     generate() {
         var date_from = 0;
@@ -216,14 +207,6 @@ export default {
               showConfirmButton: false,
               timer: 2000
               })
-        // } else if (this.forms.zreading.fields.user_hash == null) {
-        //      Toast.fire({
-        //       position: 'top-right',
-        //       icon: 'error',
-        //       title: 'Please select a Cashier',
-        //       showConfirmButton: false,
-        //       timer: 2000
-        //       })
         } else if (this.from_datetime != null && this.to_datetime != null && this.forms.zreading.fields.user_hash != null) {
             console.log('Show me')
              date_from = this.moment(this.from_datetime, "YYYY-MM-DD");
@@ -255,7 +238,6 @@ export default {
             console.log(err)
           })
         }
-       
       }
   },
   created () {
@@ -266,7 +248,6 @@ export default {
             }
         })
         .then(response => {
-            // this.tables.inmr.items = response.data.inmr;
             this.options.user.items = response.data.user;
             this.options.term.items = response.data.term;
         })
