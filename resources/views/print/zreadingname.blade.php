@@ -57,12 +57,16 @@
         $hash = 0;
         $beg_total_sum = 0;
         $total = 0;
+        $operator = null;
         $totalcost = collect($printbetweendate)->count();
 
         foreach($printbetweendate as $print)
         $gross_total += $print->gross_amount
         ?>
-        
+        <?php
+        foreach($user as $u)
+        $operator = $u->username
+        ?>
         <?php
         foreach($printbetweendate as $print)
         $tot_taxable_amount += $print->tot_taxable_amount
@@ -94,7 +98,7 @@
                 Register #:<span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;000000101</span><br>
                 Location #:<span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;Tarlac City</span><br>
                 Terminal #: <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;All</span><br>
-                Operator: <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;All</span><br>
+                Operator: <span>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&nbsp;{{$operator}}</span><br>
                 <hr>
                 Beginning SI#: {{$beginning}}<br>
                 Ending SI#: &emsp;&nbsp;&nbsp;{{$ending}}<br>

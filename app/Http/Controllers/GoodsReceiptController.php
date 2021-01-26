@@ -26,7 +26,7 @@ class GoodsReceiptController extends Controller
 
         $data['products'] = Inmr::select('*')->get();
 
-        $data['psoh'] = Psoh::select('*')->where('status_code', 'A' )->get();
+        $data['psoh'] = Psoh::select('*')->where('status_code', 'A' )->orwhere('status_code', 'R' )->get();
         
         return $data;
     }
@@ -38,6 +38,7 @@ class GoodsReceiptController extends Controller
      */
     public function create(Request $request)
     {
+
         Validator::make($request->all(),
         [
             'doc_ref_no' => 'required',
@@ -54,12 +55,13 @@ class GoodsReceiptController extends Controller
         $goodreceipt->ord_req_no = $request->input('ord_req_no');
         $goodreceipt->doc_ref_no = $request->input('doc_ref_no');
         $goodreceipt->receipt_date = date('Y-m-d');
-        $goodreceipt->status_code = 'R';
+        $goodreceipt->status_code = 'O';
         $goodreceipt->issued_dt = Carbon::now();
         $goodreceipt->create_date = Carbon::now();
-        $goodreceipt->update_id = Auth::user()->user_hash;
+        $goodreceipt->create_id = Auth::user()->user_hash;
         $goodreceipt->save();
-
+        
+        DB::table('psoh')->where('psoh_hash', $goodreceipt->psoh_hash)->update(['status_code' => 'R']);   
         DB::table('brmr')->where('co_no', '01')->where('br_no', '01')->increment('nx_psgh_gr_no');
         
         $items = $request->input('items');
@@ -75,7 +77,9 @@ class GoodsReceiptController extends Controller
                 'order_qty'=>$item['order_qty'],
                 'receipt_qty'=>$item['new_receipt_qty'],
                 'act_cost'=>$item['act_cost'],
+                'est_cost'=>$item['act_cost'],
                 'sale_price'=>$item['sale_price'],
+                'expiry_date'=>$item['expiry_date'],
                 'create_id' => Auth::user()->user_hash,
                 'create_date'=>Carbon::now(),
         
@@ -83,6 +87,7 @@ class GoodsReceiptController extends Controller
         }
     
         DB::table('psgl')->insert($items_dataset);
+       
 
         $items_inlo = [];
         foreach($items as $item)
@@ -95,13 +100,19 @@ class GoodsReceiptController extends Controller
                 'cost'=>$item['act_cost'],
                 'date'=>date("Y-m-d"),
                 'expiry_date'=>$item['expiry_date'],
-                // 'create_id' => Auth::user()->user_hash,
                 'create_date'=>Carbon::now()
         
             ];
         }
     
         DB::table('inlo')->insert($items_inlo);
+
+        foreach($items as $item)
+        {
+            DB::table('psol')->where('psoh_hash', $request->input('psoh_hash'))
+            ->where('inmr_hash', $item['inmr_hash'])
+            ->increment('receipt_qty',$item['new_receipt_qty']);
+        }
 
         foreach($items as $item)
         {

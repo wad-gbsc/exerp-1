@@ -787,7 +787,7 @@ export default {
                 receipt_qty: this.selectedRow[0].receipt_qty,
                 new_receipt_qty: this.selectedRow[0].new_receipt_qty,
                 act_cost: this.selectedRow[0].act_cost,
-                sale_price: this.selectedRow[0].sale_price,
+                sale_price: this.selectedRow[0].act_cost,
                 expiry_date: this.selectedRow[0].expiry_date,
            })
         }

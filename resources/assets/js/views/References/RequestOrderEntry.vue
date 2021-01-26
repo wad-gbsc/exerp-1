@@ -26,7 +26,7 @@
                         <b-col lg="4">
                         <b-form-group style="float:right; margin-top:3px;">
                         <b-button variant="danger" @click="setDelete()" v-show="forms.poentry.fields.ord_req_no != null" :disabled="status_code === 'R' || status_code === 'A'"><i class="fa fa-ban"></i> Cancel</b-button>
-                        <b-button variant="outline-primary" @click="status_code = null, clearFields('poentry'), tables.poe.items = [], $refs.required_date.clearDate(), entryMode = 'Add'"><i class="fa fa-eraser"></i> Clear</b-button>
+                        <b-button variant="outline-primary" @click="status_code = null, clearFields('poentry'), tables.poe.items = [], forms.poentry.fields.required_date = new Date() , entryMode = 'Add'"><i class="fa fa-eraser"></i> Clear</b-button>
                         <b-button variant="primary"  :disabled="forms.poentry.isSaving" @click="onPurchasemainEntry()"> <icon v-if="forms.poentry.isSaving" name="sync" spin></icon><i class="fa fa-floppy-o"></i> Save</b-button>
                         </b-form-group>
                          </b-col>
@@ -132,6 +132,7 @@
                                 > <!-- table -->
                                 <template v-slot:cell(order_qty)="data">
                                 <vue-autonumeric
+                                :disabled="status_code == 'A' || status_code == 'R' "
                                     ref="order_qty"
                                     id="order_qty"
                                     v-model="data.item.order_qty"
@@ -143,6 +144,7 @@
                                 </template>
                                  <template v-slot:cell(remarks)="data">
                                  <b-form-input
+                                    :disabled="status_code == 'A' || status_code == 'R' "
                                     v-model="data.item.remarks"
                                     id="remarks"
                                     ref="remarks"
@@ -214,6 +216,7 @@ export default {
                 isDeleting: false,
                 fields: {
                  psoh_hash: null,
+                 required_date: new Date(),
                 }
             }
         }, 

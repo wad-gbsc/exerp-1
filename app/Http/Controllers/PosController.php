@@ -24,6 +24,7 @@ class PosController extends Controller
         // $data['products'] = Inmr::select('*')->get();
         $data['products'] = Inlo::select(
             'inlo.*',
+            'inwh.*',
             'inmr.*'
             )
         ->leftJoin('inwh', 'inwh.inwh_hash', 'inlo.inwh_hash')
@@ -62,12 +63,12 @@ class PosController extends Controller
         $pos->gross_amount = $request->input('gross_amount');
         $pos->disc_code = $request->input('disc_code');
         $pos->disc_amount = $request['disc_amount_header'];
-        $pos->tot_taxable_amount = $request['tot_taxable_amount'];
-        // $pos->vat_amount = $request->input('vat_amount');
-        // $pos->net_amount = $request->input('net_amount');
+        $pos->tot_taxable_amount = $request['net_amount'];
+        $pos->vat_amount = $request->input('vat_amount');
+        $pos->net_amount = $request->input('tot_taxable_amount');
         $pos->cash_rendered = $request->input('cash_rendered');
         $pos->create_date = Carbon::now();
-        $pos->update_id = Auth::user()->user_hash;
+        $pos->create_id = Auth::user()->user_hash;
         $pos->save();
 
         DB::table('brmr')->where('co_no', '01')->where('br_no', '01')->increment('nx_pssh_trans_no');
@@ -95,13 +96,23 @@ class PosController extends Controller
         }
     
         DB::table('pssl')->insert($items_dataset);
+        
+        foreach($items as $item)
+        {
+            DB::table('inlo')->where('inlo_hash', $item['inlo_hash'])
+            ->decrement('qty',$item['product_quantity']);
+        }
 
-        $data['products'] = Inlo::select(
-            'inlo.expiry_date',
-            'inmr.*'
+        foreach($items as $item)
+        {
+            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])
+            ->decrement('on_hand',$item['product_quantity']);
+        }
+
+        $data['pos'] = DB::table('pssl')->select(
+            '*'
             )
-        ->leftJoin('inwh', 'inwh.inwh_hash', 'inlo.inwh_hash')
-        ->leftJoin('inmr', 'inmr.inmr_hash', 'inwh.inmr_hash')
+        ->leftJoin('pssh', 'pssh.pssh_hash', 'pssl.pssh_hash')
         ->get();
 
         return ( new Reference( $data ) )
@@ -187,15 +198,16 @@ class PosController extends Controller
     }
     public function getBarcode($id)
     {
-        
-        $barcode = Inlo::select(
-            'inlo.expiry_date',
+
+        $barcode  = Inlo::select(
+            'inlo.*',
+            'inwh.*',
             'inmr.*'
             )
-                ->leftJoin('inwh', 'inwh.inwh_hash', 'inlo.inwh_hash')
-                ->leftJoin('inmr', 'inmr.inmr_hash', 'inwh.inmr_hash')
-                ->where('inmr.barcode', $id)
-                ->get();
+        ->leftJoin('inwh', 'inwh.inwh_hash', 'inlo.inwh_hash')
+        ->leftJoin('inmr', 'inmr.inmr_hash', 'inwh.inmr_hash')
+        ->where('inmr.barcode', $id)
+        ->get();
 
         
         return $barcode;

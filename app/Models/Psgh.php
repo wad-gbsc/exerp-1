@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Psgh extends Model
 {
-    protected $table = 'Psgh';
+    protected $table = 'psgh';
     protected $primaryKey = 'psgh_hash';
     public $timestamps = false;
 }

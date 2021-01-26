@@ -726,7 +726,10 @@ input[type="number"]::-webkit-outer-spin-button {
                             id="disc_amount_header"
                             style="font-size: 54px; color:white"
                             class="float-right"
-                          >{{formatNumber(this.forms.pos.fields.disc_code * getTotalItems)}}</span>
+                          >
+                          {{formatNumber(this.getDiscount)}}
+                          <!-- {{formatNumber(this.forms.pos.fields.disc_code * getTotalItems)}} -->
+                          </span>
                         </td>
                       </tr>
                       <br>
@@ -739,8 +742,11 @@ input[type="number"]::-webkit-outer-spin-button {
                             style="font-size: 54px; color:white"
                             class="float-right"
                           >
-                          {{formatNumber(forms.pos.fields.gross_amount - (forms.pos.fields.gross_amount * forms.pos.fields.disc_code))}}
+                          {{formatNumber(this.getTotalAmount)}}
+                          <!-- {{formatNumber(forms.pos.fields.gross_amount - (forms.pos.fields.gross_amount * forms.pos.fields.disc_code))}} -->
                           </span>
+                          <span style="display: none"> {{formatNumber(this.getNetAmount)}} </span>
+                          <span style="display: none"> {{formatNumber(this.getVatAmount)}} </span>
                         </td>
                       </tr>
                       <br>
@@ -899,7 +905,10 @@ export default {
             cash_rendered: null,
             disc_code: null,
             disc_amount_header: null,
-            tot_taxable_amount: null
+            tot_taxable_amount: null,
+            vat_amount: null,
+            net_amount: null
+
           }
         },
         payment: {
@@ -992,6 +1001,12 @@ export default {
         },
         products: {
           fields: [
+            {
+              key: "qty",
+              label: "Qty",
+              tdClass: "align-middle",
+              sortable: true
+            },
             {
               key: "item_no",
               label: "Product Code",
@@ -1288,6 +1303,36 @@ export default {
           (Number(item.price) * Number(item.product_quantity)) - Number(item.disc_amount);
       });
       return parseFloat(this.forms.pos.fields.gross_amount, 2);
+    },
+    getDiscount() {
+      this.forms.pos.fields.disc_amount_header = 0;
+
+        this.forms.pos.fields.disc_amount_header =
+        Number(this.forms.pos.fields.disc_code) * Number(this.getTotalItems);
+
+      return parseFloat(this.forms.pos.fields.disc_amount_header, 2);
+    },
+    getTotalAmount() {
+      this.forms.pos.fields.tot_taxable_amount = 0;
+
+        this.forms.pos.fields.tot_taxable_amount =
+        Number(this.getTotalItems) - (Number(this.getTotalItems) * Number(this.forms.pos.fields.disc_code));
+
+      return parseFloat(this.forms.pos.fields.tot_taxable_amount, 2);
+    },
+    getNetAmount() {
+    this.forms.pos.fields.net_amount = 0;
+        this.forms.pos.fields.net_amount =
+         (Number(this.getTotalAmount) / Number(1.12));
+
+      return parseFloat(this.forms.pos.fields.net_amount, 2);
+    },
+    getVatAmount() {
+    this.forms.pos.fields.vat_amount = 0;
+        this.forms.pos.fields.vat_amount =
+         (Number(this.getTotalAmount) - Number(this.getNetAmount));
+
+      return parseFloat(this.forms.pos.fields.vat_amount, 2);
     }
   },
   getTotalPayment() {
