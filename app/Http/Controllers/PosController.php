@@ -76,11 +76,13 @@ class PosController extends Controller
         $items = $request->input('items');
     
         $items_dataset = [];
+        $line_no = 0;
         foreach($items as $item)
         {
             $items_dataset[] = [
                 'pssh_hash'=>$pos->pssh_hash,
                 'inmr_hash'=>$item['inmr_hash'],
+                'line_no' => $line_no++,
                 'inlo_hash'=>$item['inlo_hash'],
                 'uom_code'=>$item['uom_code'],
                 'base_price'=>$item['price'],
@@ -105,7 +107,7 @@ class PosController extends Controller
 
         foreach($items as $item)
         {
-            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])
+            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])->where('inwh_hash', $item['inwh_hash'])
             ->decrement('on_hand',$item['product_quantity']);
         }
 

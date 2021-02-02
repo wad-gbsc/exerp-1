@@ -102,14 +102,16 @@
                     <i class="fa fa-home"></i>
                   </span>
                   <select2
+                  id="co_no"
+                  ref="co_no"
                   style="width: 87%;"
                   :allowClear="false"
                   :placeholder="'Company'"
                   v-model="login.co_no"
                   >
                 <option v-for="comr in options.comr.items"
-                :key="comr.co_no"
-                :value="comr.co_no"
+                :key="comr.comr_hash"
+                :value="comr.comr_hash"
                 >{{comr.co_code}}</option>
                   </select2>
                 </div>
@@ -119,14 +121,16 @@
                     <i class="fa fa-home" aria-hidden="true"></i>
                   </span>
                   <select2
+                  id="br_no"
+                  ref="br_no"
                   style="width: 87%;"
                   :allowClear="false"
                   :placeholder="'Branch'"
                   v-model="login.br_no"
                   >
                 <option v-for="brmr in options.brmr.items"
-                :key="brmr.br_no"
-                :value="brmr.br_code"
+                :key="brmr.brmr_hash"
+                :value="brmr.brmr_hash"
                 >{{brmr.br_code}}</option>
                   </select2>
                 </div>
@@ -135,14 +139,16 @@
                     <i class="fa fa-home" aria-hidden="true"></i>
                   </span>
                   <select2
+                  id="wh_no"
+                  ref="wh_no"
                   style="width: 87%;"
                   :allowClear="false"
                   :placeholder="'Warehouse'"
                   v-model="login.wh_no"
                   >
                 <option v-for="whmr in options.whmr.items"
-                :key="whmr.wh_no"
-                :value="whmr.wh_no"
+                :key="whmr.whmr_hash"
+                :value="whmr.whmr_hash"
                 >{{whmr.wh_code}}</option>
                   </select2>
                 </div>
@@ -159,56 +165,6 @@
 
 <script>
 export default {
-  name: 'Login',
-  data(){
-    return{
-      login: {
-        username: null,
-        password: null,
-        is_saving: false
-      }
-    }
-  },
-  methods: {
-    authLogin(){
-      this.login.is_saving = true
-      this.$http.post('api/auth/login', { 
-                    username: this.login.username,
-                    password: this.login.password
-                }).then(response => {
-                    this.$store.commit('loginUser')
-                    this.$store.commit('user', response.data.user)
-                    localStorage.setItem('token', response.data.access_token)
-                    this.$notify({
-                      type: 'success',
-                      group: 'notification',
-                      title: 'Success!',
-                      text: 'User Authenticated successfully.'
-                    })
-                    setTimeout(function(){
-                    this.$router.push({ name: 'Dashboard' })
-                    }.bind(this), 1000)
-                    this.login.is_saving = false
-      }).catch(err => {
-            this.$notify({
-              type: 'error',
-              group: 'notification',
-              title: 'Error!',
-              text: 'Incorrect username or password.'
-            })
-            this.login.is_saving = false
-      });
-    }
-  },
-  mounted(){
-    this.focusElement('username')
-  }
-}
-</script>
-
-
-<script>
-export default {
   name: "Login",
   data() {
     return {
@@ -216,7 +172,10 @@ export default {
       login: {
         username: null,
         password: null,
-        is_saving: false
+        is_saving: false,
+        wh_no: null,
+        br_no: null,
+        co_no: null
       },
       options: {
         comr: {
@@ -232,12 +191,50 @@ export default {
     };
   },
   methods: {
+    onAccessEntry() {
+                this.$http
+                .post("api/auth/psld", this.login, {
+                headers: {
+                    Authorization: "Bearer " + localStorage.getItem("token")
+                }
+                })
+                .then(response => {
+
+                }).catch(err => {
+                  console.log(err)
+                })
+        
+    },
      authLogin(){
+
+       if (this.login.co_no == null) {
+         this.focusElement('co_no')
+          Toast.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select a Company.'
+              })
+       }else if (this.login.br_no == null) {
+         this.focusElement('br_no')
+         Toast.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select a Branch.'
+              })
+       }else if (this.login.wh_no == null) {
+          this.focusElement('wh_no')
+         Toast.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Please Select a Warehouse  .'
+              })
+       }else{
       this.login.is_saving = true
       this.$http.post('api/auth/login', { 
                     username: this.login.username,
                     password: this.login.password
                 }).then(response => {
+                    this.onAccessEntry();
                     this.$store.commit('loginUser')
                     this.$store.commit('user', response.data.user)
                     localStorage.setItem('token', response.data.access_token)
@@ -246,6 +243,7 @@ export default {
                       title: 'Success!',
                       text: 'User authenticated successfully.'
                     })
+                    
                     setTimeout(function(){
                     this.$router.push({ name: 'Dashboard' })
                     }.bind(this), 1000)
@@ -258,6 +256,7 @@ export default {
                         })
                           this.login.is_saving = false
                     });
+                  }
                   }
                 },
 

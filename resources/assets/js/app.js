@@ -48,7 +48,6 @@ const Toast = Swal.mixin({
   timer: 3000,
   timerProgressBar: true,
 })
-
 window.Toast = Toast;
 
 

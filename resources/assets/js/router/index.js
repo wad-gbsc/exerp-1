@@ -18,6 +18,10 @@ import ROE from "@/views/References/RequestOrderEntry";
 import GRI from "@/views/References/GoodsReceipt";
 import POS from "@/views/References/PosEntry";
 import ZReading from "@/views/References/z-Reading";
+import XReading from "@/views/References/x-Reading"
+import UserAccount from "@/views/References/UserAccount"
+import product from "@/views/References/Products"
+import category from "@/views/References/Categories"
 
 import store from "../store";
 Vue.use(Router);
@@ -48,6 +52,18 @@ const router = new Router({
 
           children: [
             {
+              path: 'product',
+              name: 'Products',
+              component: product,
+              meta: {requiresAuth: true}
+            },
+            {
+              path: 'category',
+              name: 'Category',
+              component: category,
+              meta: {requiresAuth: true}
+            },
+            {
               path: 'requestorderentry',
               name: 'Request Order Entry',
               component: ROE,
@@ -65,12 +81,18 @@ const router = new Router({
               component: ZReading,
               meta: {requiresAuth: true}
             },
-            // {
-            //   path: 'posentry',
-            //   name: 'POS Entry',
-            //   component: POS,
-            //   meta: {requiresAuth: true}
-            // },
+            {
+              path: 'xreading',
+              name: 'x-Reading',
+              component: XReading,
+              meta: {requiresAuth: true}
+            },
+            {
+              path: 'user_account',
+              name: 'User Account',
+              component: UserAccount,
+              meta: {requiresAuth: true}
+            },
           ]},
       
       ]

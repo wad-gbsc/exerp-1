@@ -7,6 +7,7 @@ use App\Http\Resources\Reference;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Inmr;
+use App\Models\Inwh;
 use App\Models\Psoh;
 use App\Models\Psol;
 use Carbon\Carbon;
@@ -23,13 +24,27 @@ class RequestOrderEntryController extends Controller
     public function index()
     {
 
-        $data['inmr'] = Inmr::select(
-            'inmr.*',
-            'inwh.on_hand'
+        $acbw = DB::table('acbw')->select('acbw.company_access')->where('acbw.username' ,  Auth::user()->username)->first();
+            
+        $data['whmr'] = DB::table('whmr')->select(
+            'whmr.*'
+            // 'psld.*',
+            // 'user.username',
+            // 'user.user_hash'
+        )
+        // ->leftjoin('user', 'user.username', '=', 'psld.username')
+        // ->leftjoin('whmr', 'whmr.wh_no', '=', 'psld.wh_no')
+        // ->where('whmr.co_no', $acbw)
+        ->where('whmr.br_no', 1)
+        ->where('whmr.wh_no', 1)
+        ->get();
+
+        $data['inmr'] = Inwh::select(
+            'inwh.*','inmr.*'
 )
-                    ->leftJoin('inwh', 'inwh.inmr_hash', '=', 'inmr.inmr_hash')
+                    ->leftJoin('inmr', 'inmr.inmr_hash', '=', 'inwh.inmr_hash')
                     ->where('whmr_hash', 1)
-                    ->orderBy('inmr_hash', 'asc')
+                    // ->orderBy('inmr_hash', 'asc')
                     ->get();
 
         $data['psoh'] = DB::table('psoh')->select('*')->get();
@@ -177,7 +192,11 @@ class RequestOrderEntryController extends Controller
 
         $items = $request->input('items');
         $old_items = Psol::where('psoh_hash', $poe->psoh_hash);
+        
+
         $old_items->delete();
+            
+
 
         $items_dataset = [];
         foreach($items as $item)
@@ -202,7 +221,7 @@ class RequestOrderEntryController extends Controller
             ->leftJoin('psol', 'psol.psol_hash', '=', 'psoh.psoh_hash')
             ->findOrFail($poe->psoh_hash);
     
-        return ( new Reference( $data ) )
+        return ( new Reference( $poe ) )
             ->response()
             ->setStatusCode(200);
     }
@@ -251,7 +270,7 @@ class RequestOrderEntryController extends Controller
     }
     public function getRequest()
     {
-        $data = DB::table('psoh')->select('*')->get();
+        $data = DB::table('psoh')->select('ord_req_no')->get();
         return $data;
     }
 }

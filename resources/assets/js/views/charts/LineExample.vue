@@ -16,12 +16,12 @@ export default {
           {
             label: 'Sales',
             backgroundColor: 'lightblue',
-            data: [ 40,20 ,100 , 60, 80, 123, 35 , 66, 133 ,11, 20,200 ]
+            data: [this.january,this.january,this.january ]
           },
           {
             label: 'Income',
             backgroundColor: 'pink',
-            data: [ 33,60 ,90 , 70, 20, 153, 135 , 116, 133 ,201, 120,200 ]
+            data: [],
           }
         ]
         
@@ -42,34 +42,23 @@ export default {
           }
         }
       }
-    )
-    
+    ) 
   },
-  watch: {
-    data: function (data) {
-      this._chart.destroy()
-      this.renderChart({
-        labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-        datasets: data
-      },
-      {
-        responsive: true,
-        maintainAspectRatio: false,
-        tooltips: {
-          enabled: false,
-          custom: CustomTooltips,
-          intersect: true,
-          mode: 'index',
-          position: 'nearest',
-          callbacks: {
-            labelColor: function (tooltipItem, chart) {
-              return { backgroundColor: chart.data.datasets[tooltipItem.datasetIndex].backgroundColor }
+  created() {
+     this.$http
+        .get("api/january", {
+            headers: {
+            Authorization: "Bearer " + localStorage.getItem("token")
             }
-          }
-        }
-      })
-    }
-    
-  },
-}
+        })
+        .then(response => {
+            
+            this.january = response.data.january;
+        })
+        .catch(error => {
+            console.log(error);
+        });
+      },
+  }
+
 </script>

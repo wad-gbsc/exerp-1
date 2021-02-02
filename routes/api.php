@@ -24,7 +24,7 @@ Route::group([
     Route::get('refresh', 'AuthController@refresh');
     Route::get('me', 'AuthController@me');
     Route::get('select', 'zReadingController@Select');
-    
+    Route::post('psld', 'zReadingController@psld');
 
 });
 
@@ -39,6 +39,7 @@ Route::group([
     Route::get('betweendate/{from}/{to}', 'zReadingController@Between');
     Route::get('betweenname/{from}/{to}/{id}', 'zReadingController@BetweenName');
     Route::get('index', 'zReadingController@index');
+    
     //List goodsreceipt
     Route::get('goodsreceipts', 'GoodsReceiptController@index');
     //Create new goodsreceipt
@@ -58,6 +59,40 @@ Route::group([
     Route::put('pos/delete/{id}', 'PosController@delete');
     Route::get('getBarcode/{id}', 'PosController@getBarcode');
 
+    Route::get('january', 'DashboardController@index');
+    // Route::post('psld', 'PosController@create');
+    Route::get('date/{date}', 'xReadingController@date');
+
+    //List users
+    Route::get('users', 'UserAccountController@index');
+    //List single users
+    Route::get('user/{id}', 'UserAccountController@show');
+    //Create new users
+    Route::post('user', 'UserAccountController@create');
+    //Update users
+    Route::put('user/{id}', 'UserAccountController@update');
+    //Delete users
+    Route::put('user/delete/{id}', 'UserAccountController@delete');
+    // END users
+
+    //List categories
+    Route::get('categories', 'CategoriesController@index');
+    //List single category
+    Route::get('category/{id}', 'CategoriesController@show');
+    //Create new category
+    Route::post('category', 'CategoriesController@create');
+    //Update category
+    Route::put('category/{id}', 'CategoriesController@update');
+    //Delete category
+    Route::put('category/delete/{id}', 'CategoriesController@delete');
+    // END categories
+
+    Route::get('products', 'ProductsController@index');
+    Route::post('products', 'ProductsController@create');
+    Route::put('products/{id}', 'ProductsController@update');
+    Route::put('product/delete/{id}', 'ProductsController@delete');
+
 });
 Route::get('print/betweenname/{from}/{to}/{user_id}', 'zReadingController@PrintBetweenName');
 Route::get('print/betweendate/{from}/{to}/', 'zReadingController@PrintBetweenDate');
+Route::get('print/date/{date}/', 'xReadingController@PrintDate');

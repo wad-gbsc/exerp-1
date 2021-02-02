@@ -41,8 +41,21 @@
           <card-bar-chart-example class="chart-wrapper px-3" style="height:70px;" height="70" />
         </b-card>
       </div>
-
-      <line-example></line-example>
+<!-- 
+      <b-row lg="12">
+        <b-col lg="6">
+            <line-example ></line-example>
+        </b-col>
+         <b-col lg="6">
+            <bar-example></bar-example>
+        </b-col>
+      </b-row> -->
+      
+   
+     <!-- <pie-example></pie-example>
+       <doughnut-example></doughnut-example>
+      <polar-area-example></polar-area-example>
+      <radar-example></radar-example> -->
 
       <!--/.col-->
     </div>

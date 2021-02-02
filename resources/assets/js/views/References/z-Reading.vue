@@ -1,6 +1,21 @@
 <template>
     <div>
         <b-card>
+           <template #header>
+                        <div style="height:25px;">
+                        <b-row>
+                        <b-col lg="4">
+                        <h5>  <!-- table header -->
+                            <span style="color: #FFA500;">
+                                
+                                Z - Reading
+                                <!-- <small class="font-italic">List of all registered Card type.</small> -->
+                                </span>
+                        </h5>
+                        </b-col>
+                        </b-row>
+                        </div>
+                        </template>
         <b-row>
         <b-col lg="3">
           <label>From Date</label>

@@ -26,13 +26,14 @@
         "vuex": "^3.1.1"
     },
     "dependencies": {
-        "@coreui/coreui-plugin-chartjs-custom-tooltips": "github:coreui/coreui-plugin-chartjs-custom-tooltips",
+        "@coreui/coreui-plugin-chartjs-custom-tooltips": "^1.2.0",
         "autonumeric": "^4.5.4",
         "bootstrap-vue": "^2.2.0",
         "chart.js": "2.6.0",
         "eslint-plugin-vue": "^3.14.0",
         "font-awesome": "^4.7.0",
         "install": "^0.12.2",
+        "line-example": "^0.1.0",
         "node-sass": "^5.0.0",
         "npm": "^6.9.0",
         "nprogress": "^0.2.0",

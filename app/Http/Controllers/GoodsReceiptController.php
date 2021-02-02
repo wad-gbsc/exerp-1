@@ -67,10 +67,12 @@ class GoodsReceiptController extends Controller
         $items = $request->input('items');
     
         $items_dataset = [];
+        $line_no = 0;  
         foreach($items as $item)
         {
             $items_dataset[] = [
                 'psgh_hash'=>$goodreceipt->psgh_hash,
+                'line_no' => $line_no++,
                 'inmr_hash'=>$item['inmr_hash'],
                 'uom_code'=>$item['uom_code'],
                 'psol_hash'=>$item['psol_hash'],
@@ -95,6 +97,7 @@ class GoodsReceiptController extends Controller
             $items_inlo[] = [
                 'gr_no'=>$goodreceipt->gr_no,
                 'reference'=>$goodreceipt->doc_ref_no,
+                'inwh_hash'=>$item['inwh_hash'],
                 'uom_code'=>$item['uom_code'],
                 'qty'=>$item['new_receipt_qty'],
                 'cost'=>$item['act_cost'],
@@ -111,25 +114,19 @@ class GoodsReceiptController extends Controller
         {
             DB::table('psol')->where('psoh_hash', $request->input('psoh_hash'))
             ->where('inmr_hash', $item['inmr_hash'])
+            ->where('inwh_hash', $item['inwh_hash'])
             ->increment('receipt_qty',$item['new_receipt_qty']);
         }
 
         foreach($items as $item)
         {
-            DB::table('psol')->where('psoh_hash', $request->input('psoh_hash'))
-            ->where('inmr_hash', $item['inmr_hash'])
-            ->increment('receipt_qty',$item['new_receipt_qty']);
-        }
-
-        foreach($items as $item)
-        {
-            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])
+            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])->where('inwh_hash', $item['inwh_hash'])
             ->increment('on_hand',$item['new_receipt_qty']);
         }
 
         foreach($items as $item)
         {
-            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])
+            DB::table('inwh')->where('inmr_hash', $item['inmr_hash'])->where('inwh_hash', $item['inwh_hash'])
             ->decrement('on_order',$item['new_receipt_qty']);
         }
         
@@ -137,7 +134,7 @@ class GoodsReceiptController extends Controller
     $data['products'] = Inmr::select('*')->get();
 
     $data['psoh'] = Psoh::select('*')->get();
-    return ( new Reference( $data ) )
+    return ( new Reference( $goodreceipt ) )
         ->response()
         ->setStatusCode(200);
     }

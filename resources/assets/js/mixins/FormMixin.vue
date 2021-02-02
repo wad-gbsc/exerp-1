@@ -31,7 +31,6 @@ export default {
           // setTimeout(function () {
           //       window.location.reload();
           // }, 1500);
-          
           console.log(entity_table);
           console.log(this.tables[entity_table].items);
           console.log(this.paginations[entity_table].totalRows);

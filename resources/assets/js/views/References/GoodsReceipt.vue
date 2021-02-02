@@ -676,9 +676,9 @@ export default {
                   Swal.fire({
                   position: 'center',
                   icon: 'success',
-                  title: 'Successfully Created.',
+                  title: response.data.data.gr_no + '\nSuccessfully Created.',
                   showConfirmButton: false,
-                  timer: 2000
+                  timer: 3000
                   })
                   this.loadgoodsreceipt()
                   this.tables.goodsreceiptitems.items = []
@@ -779,6 +779,7 @@ export default {
         //     }
            this.tables.inlo.items.push({
                 inmr_hash: this.selectedRow[0].inmr_hash,
+                inwh_hash: this.selectedRow[0].inwh_hash,
                 psol_hash: this.selectedRow[0].psol_hash,
                 item_no: this.selectedRow[0].item_no,
                 description: this.selectedRow[0].description,

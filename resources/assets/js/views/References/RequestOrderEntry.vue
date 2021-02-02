@@ -55,7 +55,7 @@
                         </select2>
                         </b-form-group>
                         <b-form-group>
-                        <label for="rd">* Required Date</label>
+                        <label for="required_date">* Required Date</label>
                         <date-picker
                         :disabled="status_code == 'A' || status_code == 'R'"
                         v-model="forms.poentry.fields.required_date"
@@ -223,13 +223,6 @@ export default {
           tables: {
             poe: {
                 fields: [
-                // {
-                //     key: 'inmr_hash',
-                //     label: 'No.',
-                //     thStyle: {width: '35px'},
-                //     tdClass: 'align-middle',
-                //     sortable: true
-                // },
                 {
                     key: 'item_no',
                     label: 'Product Code',
@@ -407,27 +400,10 @@ export default {
                 .then(response => {
                 this.forms.poentry.isSaving = false;
                 this.clearFields('poentry');
-
-                this.$http
-                    .get("api/getRequest", {
-                        headers: {
-                        Authorization: "Bearer " + localStorage.getItem("token")
-                        }
-                    })
-                    .then(response => {
-                        
-                        this.getRequest = response.data;
-                        console.log(this.getRequest)
-                    })
-                    .catch(error => {
-                        console.log(error);
-                    });
-                    
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
-                        title: 'Successfully Created.',
-                        // text: this.getRequest,
+                        title: response.data.data.ord_req_no + '\n Successfully Created.',
                         showConfirmButton: false,
                         timer: 2000
                         })
@@ -497,8 +473,16 @@ export default {
             this.tables.poe.items.splice(index, 1);
     },
     addItem() {
-            
-            if (this.selectedRow.length > 0) {
+            if (this.selectedRow.length <= 0 ) {
+            Toast.fire({
+              position: 'top-right',
+              icon: 'error',
+              title: 'Please select one product.',
+              showConfirmButton: false,
+              timer: 2000
+              })
+            }else{
+    if (this.selectedRow.length > 0) {
         if (
                 this.tables.poe.items.filter(
                     i => i.inmr_hash == this.selectedRow[0].inmr_hash
@@ -526,6 +510,7 @@ export default {
           
         });
        
+      }
       }
     },
     async setDelete() {

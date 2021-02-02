@@ -222,7 +222,7 @@ input[type="number"]::-webkit-outer-spin-button {
               <b-col sm="6">
                 <b-form-input
                 placeholder="SCAN BARCODE HERE"
-                @input="barcodeCheck"
+                @change="barcodeCheck"
                 v-model="forms.pos.fields.barcode"
                   class="barr"
                   style=" font-weight:bold; font-size: 15px; "
@@ -248,7 +248,7 @@ input[type="number"]::-webkit-outer-spin-button {
               </b-col>
                <b-col sm="2">
                 <label style="font-weight:bold; font-size: 15px;">Total Quantity:</label>
-                <label style="font-weight:bold; font-size: 15px;">0</label>
+                <label style="font-weight:bold; font-size: 15px;">{{this.getTotalQty}}</label>
               </b-col>
             </b-row>
             <br>
@@ -906,6 +906,7 @@ export default {
             disc_code: null,
             disc_amount_header: null,
             tot_taxable_amount: null,
+            totalQty: null,
             vat_amount: null,
             net_amount: null
 
@@ -1175,6 +1176,7 @@ export default {
       this.forms.quantity.fields.inlo_hash = this.selectedRow[0].inlo_hash;
       this.forms.quantity.fields.uom_code = this.selectedRow[0].uom_code;
       this.forms.quantity.fields.inmr_hash = this.selectedRow[0].inmr_hash;
+      this.forms.quantity.fields.inwh_hash = this.selectedRow[0].inwh_hash;
       this.forms.quantity.fields.item_no = this.selectedRow[0].item_no;
       this.forms.quantity.fields.description = this.selectedRow[0].description;
       this.forms.quantity.fields.price = this.selectedRow[0].price;
@@ -1216,6 +1218,7 @@ export default {
       if(this.forms.pos.fields.disc_code_1 != null){
       this.tables.posentry.items.push({
         inmr_hash: this.forms.quantity.fields.inmr_hash,
+        inwh_hash: this.forms.quantity.fields.inwh_hash,
         inlo_hash: this.forms.quantity.fields.inlo_hash,
         item_no: this.forms.quantity.fields.item_no,
         description: this.forms.quantity.fields.description,
@@ -1234,6 +1237,7 @@ export default {
       }else{
          this.tables.posentry.items.push({
         inmr_hash: this.forms.quantity.fields.inmr_hash,
+        inwh_hash: this.forms.quantity.fields.inwh_hash,
         inlo_hash: this.forms.quantity.fields.inlo_hash,
         item_no: this.forms.quantity.fields.item_no,
         description: this.forms.quantity.fields.description,
@@ -1284,7 +1288,8 @@ export default {
       })
       .then(response => {
         this.tables.products.items = response.data.products;
-        this.paginations.posentry.totalRows = response.data.products.length;
+        this.paginations.products.totalRows = response.data.products.length
+        // this.paginations.posentry.totalRows = response.data.products.length;
         this.options.psds.items = response.data.psds;
         this.options.special.items = response.data.special;
         // this.options.gctypes.items = response.data.gctypes;
@@ -1298,11 +1303,19 @@ export default {
       this.forms.pos.fields.gross_amount = 0;
 
       this.tables.posentry.items.forEach(item => {
-        // console.log(item);
         this.forms.pos.fields.gross_amount +=
           (Number(item.price) * Number(item.product_quantity)) - Number(item.disc_amount);
       });
       return parseFloat(this.forms.pos.fields.gross_amount, 2);
+    },
+    getTotalQty() {
+      this.forms.pos.fields.totalQty = 0;
+
+      this.tables.posentry.items.forEach(item => {
+        this.forms.pos.fields.totalQty +=
+          (Number(item.product_quantity));
+      });
+      return parseFloat(this.forms.pos.fields.totalQty, 2);
     },
     getDiscount() {
       this.forms.pos.fields.disc_amount_header = 0;
@@ -1339,7 +1352,6 @@ export default {
     this.forms.pos.fields.payment_amount = 0;
 
     this.tables.posentry.items.forEach(item => {
-      // console.log(item);
       this.forms.payment.fields.payment_amount +=
         Number(item.disc_rate) +
         Number(item.check_type_id) +
@@ -1356,16 +1368,6 @@ export default {
         (Number(forms.pos.fields.cash_rendered) - (Number(forms.pos.fields.gross_amount) - (Number(forms.pos.fields.gross_amount) * Number(forms.pos.fields.disc_code))))
          
       return parseFloat(this.forms.pos.fields.total_change, 2);
-
-    // this.forms.totchange.fields.total_change = 0;
-
-    // this.tables.posentry.items.forEach(item => {
-    //   // console.log(item);
-    //   this.forms.totchange.fields.total_change =
-    //  // {{formatNumber(forms.pos.fields.cash_rendered - (forms.pos.fields.gross_amount * forms.pos.fields.disc_rate) - forms.pos.fields.gross_amount)}}
-    //     Number(this.forms.pos.fields.gross_amount) - Number(this.forms.pos.fields.cash_rendered);
-    // });
-    // return parseFloat(this.forms.totchange.fields.change_total, 2);
   },
   mounted(){   
     // document.querySelector('product_quantity').addEventListener("keypress", function (evt) {
